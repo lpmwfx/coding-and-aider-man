@@ -20,7 +20,7 @@ jobs:
 
     - name: Generate Documentation Index
       run: |
-        python -c "import os; index_content = '# Dokumentationsindeks\n\n'; root_dir = '.'; [os.path.relpath(os.path.join(dirpath, f), root_dir) for dirpath, _, files in os.walk(root_dir) for f in files if f.endswith('.md')]; index_content += ''.join([f'- [{os.path.basename(path)}]({path})\n' for path in paths]); with open('README.md', 'w') as index_file: index_file.write(index_content)"
+        python -c "import os; index_content = '# Dokumentationsindeks\n\n'; root_dir = '.'; paths = [os.path.relpath(os.path.join(dirpath, f), root_dir) for dirpath, _, files in os.walk(root_dir) for f in files if f.endswith('.md')]; index_content += ''.join([f'- [{os.path.basename(path)}]({path})\n' for path in paths]); with open('README.md', 'w') as index_file: index_file.write(index_content)"
 
     - name: Commit changes
       run: |
