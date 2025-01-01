@@ -1,0 +1,31 @@
+name: Generate Documentation Index
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Generate Documentation Index
+      run: |
+        python -c "import os; index_content = '# Dokumentationsindeks\n\n'; root_dir = '.'; [os.path.relpath(os.path.join(dirpath, f), root_dir) for dirpath, _, files in os.walk(root_dir) for f in files if f.endswith('.md')]; index_content += ''.join([f'- [{os.path.basename(path)}]({path})\n' for path in paths]); with open('README.md', 'w') as index_file: index_file.write(index_content)"
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git commit -m "Update documentation index" || echo "No changes to commit"
+        git push
